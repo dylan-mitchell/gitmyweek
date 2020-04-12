@@ -110,7 +110,7 @@ func main() {
 	}
 
 	now := time.Now()
-	weekAgo := now.AddDate(0, -7, 0)
+	weekAgo := now.AddDate(0, 0, -7)
 
 	start := weekAgo.Format("2006-01-02")
 	end := time.Now().Format("2006-01-02")
@@ -121,7 +121,7 @@ func main() {
 		if err != nil {
 			log.Fatal("Error Parsing start, needs to be YYYY-MM-DD")
 		}
-		end = t.AddDate(0, 7, 0).Format("2006-01-02")
+		end = t.AddDate(0, 0, 7).Format("2006-01-02")
 	}
 
 	if !exists(*dir) {
