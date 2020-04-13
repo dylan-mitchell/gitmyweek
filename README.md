@@ -1,6 +1,6 @@
 # gitmyweek
 
-A simple command line tool to show a summary of your Git commits.
+A simple command line tool to show a summary of your Git commits. This can be useful for standup, or Monday morning remembering what it was you did last week.
 
 To use
 
