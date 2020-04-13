@@ -46,7 +46,7 @@ func readFiles(path string) []os.FileInfo {
 	return files
 }
 
-func parseOutput(out, project string) []Commit {
+func parseOutput(out, project string) {
 	lines := strings.Split(out, "\n")
 	var commits []Commit
 	for _, line := range lines {
@@ -78,10 +78,10 @@ func parseOutput(out, project string) []Commit {
 		}
 	}
 
-	return commits
+	return
 }
 
-func executeCommand(path, d, user, start, end string) ([]Commit, error) {
+func executeCommand(path, d, user, start, end string) error {
 	// goExecutable, _ := exec.LookPath("git")
 	// cmdTemplate := "git --git-dir=%s/%s/.git/ log --pretty=format:\"%s: %s\" --after=\"2020-04-06\" --until=\"2020-04-10\" --author=\"dylan-mitchell\""
 
@@ -89,11 +89,11 @@ func executeCommand(path, d, user, start, end string) ([]Commit, error) {
 	// run command
 	output, err := cmd.Output()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	commits := parseOutput(string(output), d)
+	parseOutput(string(output), d)
 
-	return commits, nil
+	return nil
 }
 
 func main() {
@@ -114,6 +114,7 @@ func main() {
 
 	start := weekAgo.Format("2006-01-02")
 	end := time.Now().Format("2006-01-02")
+	dow := int(weekAgo.Weekday()) + 1
 	if *startFlag != "" {
 		start = *startFlag
 		layout := "2006-01-02"
@@ -121,7 +122,14 @@ func main() {
 		if err != nil {
 			log.Fatal("Error Parsing start, needs to be YYYY-MM-DD")
 		}
-		end = t.AddDate(0, 0, 7).Format("2006-01-02")
+		startDate := t.AddDate(0, 0, -1)
+		start = startDate.Format("2006-01-02")
+		end = t.AddDate(0, 0, 6).Format("2006-01-02")
+		dow = int(startDate.Weekday()) + 1
+	}
+
+	if dow == 7 {
+		dow = 0
 	}
 
 	if !exists(*dir) {
@@ -136,82 +144,87 @@ func main() {
 		}
 	}
 
-	var allCommits []Commit
 	for _, d := range dirsToAnalyze {
-		commits, _ := executeCommand(*dir, d, *user, start, end)
-		if len(commits) != 0 {
-			allCommits = append(allCommits, commits...)
-		}
+		executeCommand(*dir, d, *user, start, end)
 	}
 
-	if len(mon) != 0 {
-		fmt.Println("Monday")
-	}
-	for k, v := range mon {
-		fmt.Println("\t" + k)
-		for _, c := range v {
-			fmt.Println("\t\t" + c.Message)
+	for i := 0; i < 7; i++ {
+		switch dow {
+		case 0:
+			if len(sun) != 0 {
+				fmt.Println("Sunday")
+			}
+			for k, v := range sun {
+				fmt.Println("\t" + k)
+				for _, c := range v {
+					fmt.Println("\t\t" + c.Message)
+				}
+			}
+		case 1:
+			if len(mon) != 0 {
+				fmt.Println("Monday")
+			}
+			for k, v := range mon {
+				fmt.Println("\t" + k)
+				for _, c := range v {
+					fmt.Println("\t\t" + c.Message)
+				}
+			}
+		case 2:
+			if len(tue) != 0 {
+				fmt.Println("Tuesday")
+			}
+			for k, v := range tue {
+				fmt.Println("\t" + k)
+				for _, c := range v {
+					fmt.Println("\t\t" + c.Message)
+				}
+			}
+		case 3:
+			if len(wed) != 0 {
+				fmt.Println("Wednesday")
+			}
+			for k, v := range wed {
+				fmt.Println("\t" + k)
+				for _, c := range v {
+					fmt.Println("\t\t" + c.Message)
+				}
+			}
+		case 4:
+			if len(thu) != 0 {
+				fmt.Println("Thursday")
+			}
+			for k, v := range thu {
+				fmt.Println("\t" + k)
+				for _, c := range v {
+					fmt.Println("\t\t" + c.Message)
+				}
+			}
+		case 5:
+			if len(fri) != 0 {
+				fmt.Println("Friday")
+			}
+			for k, v := range fri {
+				fmt.Println("\t" + k)
+				for _, c := range v {
+					fmt.Println("\t\t" + c.Message)
+				}
+			}
+		case 6:
+			if len(sat) != 0 {
+				fmt.Println("Saturday")
+			}
+			for k, v := range sat {
+				fmt.Println("\t" + k)
+				for _, c := range v {
+					fmt.Println("\t\t" + c.Message)
+				}
+			}
+			dow = -1
 		}
-	}
 
-	if len(tue) != 0 {
-		fmt.Println("Tuesday")
-	}
-	for k, v := range tue {
-		fmt.Println("\t" + k)
-		for _, c := range v {
-			fmt.Println("\t\t" + c.Message)
-		}
-	}
+		dow++
 
-	if len(wed) != 0 {
-		fmt.Println("Wednesday")
-	}
-	for k, v := range wed {
-		fmt.Println("\t" + k)
-		for _, c := range v {
-			fmt.Println("\t\t" + c.Message)
-		}
-	}
-
-	if len(thu) != 0 {
-		fmt.Println("Thursday")
-	}
-	for k, v := range thu {
-		fmt.Println("\t" + k)
-		for _, c := range v {
-			fmt.Println("\t\t" + c.Message)
-		}
-	}
-
-	if len(fri) != 0 {
-		fmt.Println("Friday")
-	}
-	for k, v := range fri {
-		fmt.Println("\t" + k)
-		for _, c := range v {
-			fmt.Println("\t\t" + c.Message)
-		}
-	}
-
-	if len(sat) != 0 {
-		fmt.Println("Saturday")
-	}
-	for k, v := range mon {
-		fmt.Println("\t" + k)
-		for _, c := range v {
-			fmt.Println("\t\t" + c.Message)
-		}
-	}
-
-	if len(sun) != 0 {
-		fmt.Println("Sunday")
-	}
-	for k, v := range mon {
-		fmt.Println("\t" + k)
-		for _, c := range v {
-			fmt.Println("\t\t" + c.Message)
-		}
 	}
 
 }
