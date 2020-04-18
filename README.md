@@ -12,25 +12,11 @@ If no start date is given then, the default is the last week.
 
 This tool only works if you have all of your Git repos in one directory. For example I have all of mine in `~/Development`.
 
-So I would do `./gitmyweek -dir="/Users/dylanmitchell/Development" -author="dylan-mitchell" -start="2020-02-05"`
+So I would do `./gitmyweek -dir="/Users/dylanmitchell/Development" -author="dylan-mitchell" -start="2020-02-06"`
 
 Output:
 
 ```
-Monday
-	memex
-		Added ability to generate yearly summary
-	ParseTakeout
-		Add year to yearly summary
-		Added functions to get total summary
-Tuesday
-	memex
-		Added screenshots
-		Updated package.json
-		Added total summary and about sections
-Wednesday
-	ParseTakeout
-		Added logic to parse youtube watch history
 Thursday
 	ParseTakeout
 		Added model files
@@ -42,14 +28,25 @@ Friday
 		Added function to get years
 Saturday
 	ParseTakeout
-		Add year to yearly summary
-		Added functions to get total summary
-	memex
-		Added ability to generate yearly summary
+		Dont accept items that are over 250 chars
+		Unencode results
+		Leave results url encoded
+		Added function to search items
 Sunday
+	ParseTakeout
+		Ignore empty channels
+		Added functions to get yearly summaries
+	memex
+		init commit
+Monday
 	ParseTakeout
 		Add year to yearly summary
 		Added functions to get total summary
 	memex
 		Added ability to generate yearly summary
+Tuesday
+	memex
+		Added screenshots
+		Updated package.json
+		Added total summary and about sections
 ```
