@@ -114,7 +114,7 @@ func main() {
 
 	start := weekAgo.Format("2006-01-02")
 	end := time.Now().Format("2006-01-02")
-	dow := int(weekAgo.Weekday()) + 1
+	dow := int(weekAgo.Weekday())
 	if *startFlag != "" {
 		start = *startFlag
 		layout := "2006-01-02"
@@ -122,14 +122,8 @@ func main() {
 		if err != nil {
 			log.Fatal("Error Parsing start, needs to be YYYY-MM-DD")
 		}
-		startDate := t.AddDate(0, 0, -1)
-		start = startDate.Format("2006-01-02")
-		end = t.AddDate(0, 0, 6).Format("2006-01-02")
-		dow = int(startDate.Weekday()) + 1
-	}
-
-	if dow == 7 {
-		dow = 0
+		end = t.AddDate(0, 0, 7).Format("2006-01-02")
+		dow = int(t.Weekday())
 	}
 
 	if !exists(*dir) {
@@ -145,7 +139,10 @@ func main() {
 	}
 
 	for _, d := range dirsToAnalyze {
-		executeCommand(*dir, d, *user, start, end)
+		err := executeCommand(*dir, d, *user, start, end)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	for i := 0; i < 7; i++ {
